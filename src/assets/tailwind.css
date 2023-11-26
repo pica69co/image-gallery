@@ -1,0 +1,5 @@
+/* Path: src/assets/main.css */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "tailwindcss/tailwind.css";
