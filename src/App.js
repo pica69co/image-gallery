@@ -3,6 +3,7 @@ import ImageCard from "./components/ImageCard";
 import ImageSearch from "./components/ImageSearch";
 import "./app.css";
 import LoadMore from "./components/LoadMore";
+import ScrollButton from "./components/ScrollButton";
 
 function App() {
   const [images, setImages] = useState([]);
@@ -40,6 +41,7 @@ function App() {
         ))}
       </div>
       <LoadMore term={term} />
+      <ScrollButton />
     </div>
   );
 }

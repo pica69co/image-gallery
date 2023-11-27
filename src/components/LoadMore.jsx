@@ -49,8 +49,8 @@ function LoadMore(term) {
         "wait..."
       ) : (
         <section className="grid grid-cols-3 gap-4">
-          {images.map((image) => (
-            <ImageCard key={image.id} image={image} />
+          {images.map((image, idx) => (
+            <ImageCard key={idx} image={image} />
           ))}
         </section>
       )}
