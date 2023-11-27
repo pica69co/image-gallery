@@ -271,3 +271,6 @@ hover:bg-teal-700 {
 .mr-2 {
   margin-right: 0.5rem /* 8px */;
 }
+.bg {
+  background: #0f1117;
+}

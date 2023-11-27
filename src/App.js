@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import ImageCard from "./components/ImageCard";
 import ImageSearch from "./components/ImageSearch";
 import "./app.css";
+import LoadMore from "./components/LoadMore";
 function App() {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [term, setTerm] = useState("");
-  const page = 1;
+  let page = 1;
   useEffect(() => {
+    setIsLoading(true);
     fetch(
       `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true&page=${page}`
     )
@@ -17,10 +19,10 @@ function App() {
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
-  }, [term]);
+  }, [term]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto max-w-7xl ">
       <ImageSearch searchText={(text) => setTerm(text)} />
 
       {!isLoading && images.length === 0 && (
@@ -28,7 +30,15 @@ function App() {
       )}
 
       {isLoading ? (
-        <h1 className="text-6xl text-center mx-auto mt-32">Loading...</h1>
+        <div className="relative w-full h-[37vh] text-6xl text-center mx-auto mt-32">
+          <img
+            src="./assets/images/spinner.svg"
+            alt="spinner"
+            width={56}
+            height={56}
+            className="object-contain"
+          />
+        </div>
       ) : (
         <div className="grid grid-cols-3 gap-4">
           {images.map((image) => (
@@ -36,6 +46,7 @@ function App() {
           ))}
         </div>
       )}
+      <LoadMore term={term} />
     </div>
   );
 }
