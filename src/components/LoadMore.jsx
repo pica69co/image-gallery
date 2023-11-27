@@ -7,47 +7,51 @@ function LoadMore(term) {
 
   const [images, setImages] = useState([] || undefined);
   const [isLoading, setIsLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(false);
 
-  let page = 2;
+  const delay = 1000;
+  const [page, setPage] = useState(2);
+
   useEffect(() => {
     if (!inView) return;
     if (inView) {
       setIsLoading(true);
       // Add a delay of 500 milliseconds
-      const delay = 700;
       console.log(images);
-      const timeoutId = setTimeout(() => {
+      async function fetchMorePosts() {
+        setIsLoading(true);
+        setTimeout(() => setShowLoading(true), delay);
         fetch(
-          `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true&page=${page}`
+          `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true&per_page=50&page=${page}&safesearch=true`
         )
           .then((res) => res.json())
-          .then((res) => {
-            console.log(res);
-            setImages([...images, ...res.hits]);
-            page++;
+          .then((data) => {
+            setImages((prevImages) => [...prevImages, ...data.hits]);
             setIsLoading(false);
-          });
-
-        setIsLoading(false);
-      }, delay);
-
-      // Clear the timeout if the component is unmounted or inView becomes false
-      return () => clearTimeout(timeoutId);
+            setPage((prevPage) => prevPage + 1);
+          })
+          .catch((err) => console.log(err));
+      }
+      fetchMorePosts();
+      // setIsLoading(false);
     }
-    setIsLoading(false);
-  }, [inView, images, isLoading]);
+  }, [inView, page, images, isLoading]);
 
   return (
     <>
-      <section className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-10">
-        {images.map((image) => (
-          <ImageCard key={image.id} image={image} />
-        ))}
-      </section>
+      {!showLoading ? (
+        "wait..."
+      ) : (
+        <section className="grid grid-cols-3 gap-4">
+          {images.map((image) => (
+            <ImageCard key={image.id} image={image} />
+          ))}
+        </section>
+      )}
 
       <section className="flex justify-center items-center w-full">
         <div ref={ref}>
-          {inView && isLoading && (
+          {isLoading && (
             <img
               src="../assets/images/spinner.svg"
               alt="spinner"
