@@ -8,10 +8,11 @@ function LoadMore(term) {
   const [images, setImages] = useState([] || undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [showLoading, setShowLoading] = useState(false);
+  const [error, setError] = useState({});
 
   const delay = 1000;
-  const [page, setPage] = useState(2);
-
+  const [page, setPage] = useState(3);
+  console.log(page);
   useEffect(() => {
     if (!inView) return;
     if (inView) {
@@ -29,8 +30,13 @@ function LoadMore(term) {
             setImages((prevImages) => [...prevImages, ...data.hits]);
             setIsLoading(false);
             setPage((prevPage) => prevPage + 1);
+            if (!data) setError({ message: "List End. No more images" });
           })
-          .catch((err) => console.log(err));
+          .catch((err) =>
+            setError({
+              message: "Something went wrong. Please try again later",
+            })
+          );
       }
       fetchMorePosts();
       // setIsLoading(false);
@@ -51,7 +57,7 @@ function LoadMore(term) {
 
       <section className="flex justify-center items-center w-full">
         <div ref={ref}>
-          {isLoading && (
+          {isLoading && !error.message && (
             <img
               src="../assets/images/spinner.svg"
               alt="spinner"
@@ -60,6 +66,7 @@ function LoadMore(term) {
               className="object-contain"
             />
           )}
+          {error && <p>{error.message}</p>}
         </div>
       </section>
     </>
