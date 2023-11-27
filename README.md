@@ -1,3 +1,7 @@
+## Image Gallery
+
+React, JS, Framer motion, tailwind, and thirds party API.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
